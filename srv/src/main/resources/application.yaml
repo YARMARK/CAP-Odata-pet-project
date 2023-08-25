@@ -1,7 +1,16 @@
 ---
 spring:
-  config.activate.on-profile: default
-  sql.init.platform: h2
+  config:
+    activate:
+     on-profile: default
+  sql:
+    init:
+      platform: h2
 cds:
-  datasource.auto-config.enabled: false
-  sql.supportedLocales: "*"
+  data-source:
+    auto-config:
+      enabled: false
+  sql:
+    supported-locales: "*"
+server:
+  port: 8080
