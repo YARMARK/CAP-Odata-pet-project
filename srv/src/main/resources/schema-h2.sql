@@ -47,10 +47,6 @@ CREATE TABLE bookstore_Authors (
 
 CREATE TABLE bookstore_Books (
   ID NVARCHAR(36) NOT NULL,
-  createdAt TIMESTAMP(7),
-  createdBy NVARCHAR(255),
-  modifiedAt TIMESTAMP(7),
-  modifiedBy NVARCHAR(255),
   name NVARCHAR(111),
   stock INTEGER,
   price DECIMAL(9, 2),
@@ -98,9 +94,6 @@ CREATE TABLE sap_common_Currencies_texts (
 
 CREATE VIEW BooksService_Book AS SELECT
   Books_0.ID,
-  Books_0.createdAt,
-  Books_0.createdBy,
-  Books_0.modifiedAt,
   Books_0.name,
   Books_0.stock,
   Books_0.price,
@@ -148,10 +141,6 @@ FROM (sap_common_Currencies AS L_0 LEFT JOIN sap_common_Currencies_texts AS loca
 
 CREATE VIEW localized_bookstore_Books AS SELECT
   L.ID,
-  L.createdAt,
-  L.createdBy,
-  L.modifiedAt,
-  L.modifiedBy,
   L.name,
   L.stock,
   L.price,
@@ -193,9 +182,6 @@ FROM localized_sap_common_Currencies AS Currencies_0;
 
 CREATE VIEW localized_BooksService_Book AS SELECT
   Books_0.ID,
-  Books_0.createdAt,
-  Books_0.createdBy,
-  Books_0.modifiedAt,
   Books_0.name,
   Books_0.stock,
   Books_0.price,
@@ -236,10 +222,6 @@ FROM (sap_common_Currencies AS L_0 LEFT JOIN sap_common_Currencies_texts AS loca
 
 CREATE VIEW localized_de_bookstore_Books AS SELECT
   L.ID,
-  L.createdAt,
-  L.createdBy,
-  L.modifiedAt,
-  L.modifiedBy,
   L.name,
   L.stock,
   L.price,
@@ -249,10 +231,6 @@ FROM bookstore_Books AS L;
 
 CREATE VIEW localized_fr_bookstore_Books AS SELECT
   L.ID,
-  L.createdAt,
-  L.createdBy,
-  L.modifiedAt,
-  L.modifiedBy,
   L.name,
   L.stock,
   L.price,
@@ -326,9 +304,6 @@ FROM localized_fr_sap_common_Currencies AS Currencies_0;
 
 CREATE VIEW localized_de_BooksService_Book AS SELECT
   Books_0.ID,
-  Books_0.createdAt,
-  Books_0.createdBy,
-  Books_0.modifiedAt,
   Books_0.name,
   Books_0.stock,
   Books_0.price,
@@ -338,9 +313,6 @@ FROM localized_de_bookstore_Books AS Books_0;
 
 CREATE VIEW localized_fr_BooksService_Book AS SELECT
   Books_0.ID,
-  Books_0.createdAt,
-  Books_0.createdBy,
-  Books_0.modifiedAt,
   Books_0.name,
   Books_0.stock,
   Books_0.price,

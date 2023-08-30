@@ -8,12 +8,12 @@ using { Currency, cuid, managed } from '@sap/cds/common';
     books     : Association to many Books on books.author = $self;
     }
 
-  entity Books : cuid, managed {
+  entity Books : cuid {
     name    : String(111) @mandatory;
     stock   : Integer;
     price   : Decimal(9,2);
     currency : Currency;
-    author  : Association to Authors @assert.target;
+    author  : Association to Authors;
     stores  : Association to many BooksStores on stores.book = $self;
   }
 

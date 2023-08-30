@@ -1,16 +1,19 @@
----
+
 spring:
-  config:
-    activate:
-     on-profile: default
+  config.activate.on-profile: default
+  datasource:
+    url: "jdbc:sqlite:D:\\Projects\\bookstore\\db.sqlite"
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
   sql:
     init:
-      platform: h2
+      mode: always
+
 cds:
+  odata-v4.endpoint.path: "/api"
   data-source:
-    auto-config:
-      enabled: false
-  sql:
-    supported-locales: "*"
+    auto-config.enabled: true
+
 server:
   port: 8080
