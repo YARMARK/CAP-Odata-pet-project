@@ -47,3 +47,83 @@ mvn spring-boot:run
 ```
 </details>
 
+## Adding entities and relations
+
+According [Reuse a CAP Java Service](https://developers.sap.com/tutorials/cp-cap-java-service-reuse.html)
+add entities (to-One and to-Many Associations) and filling they. According the [documentation](https://cap.cloud.sap/docs/cds/cdl#managed-associations)
+add Many-to-Many Association.
+
+# FLOW
+<details><summary> Description </summary> 
+
+1. Modify scheme.cds file by adding several additional entities:
+
+```
+   entity Authors : cuid {
+    firstname : String(111);
+    lastname  : String(111);
+    books     : Association to many Books on books.author = $self;
+    }
+
+  entity Books : cuid {
+    name    : String(111) @mandatory;
+    stock   : Integer;
+    price   : Decimal(9,2);
+    currency : Currency;
+    author  : Association to Authors;
+    stores  : Association to many BooksStores on stores.book = $self;
+  }
+
+  entity Stores : cuid, managed{
+    name : String(111) @mandatory;
+    books: Association to many BooksStores on books.store = $self;
+  }
+```
+
+2. Add custom entity to managed many-to-many Association:
+```
+ entity BooksStores : managed{
+    key book  : Association to Books @mandatory @assert.target;
+    key store : Association to Stores @mandatory @assert.target;
+  }
+```
+3. Change db to sqlLite:
+     * Add [dependency](https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc)
+     * Change properties application.yml, url is a rout to file in you project which wil be generated later:
+     ```
+    datasource:
+      url: "jdbc:sqlite:D:\\Projects\\bookstore\\db.sqlite"
+       driver-class-name: org.sqlite.JDBC
+       hikari:
+          maximum-pool-size: 1
+    sql:
+      init:
+        mode: always
+
+   cds:
+     odata-v4.endpoint.path: "/api"
+     data-source:
+     auto-config.enabled: true
+      ```
+      * Generate file with necessary data:
+      ```
+      cds add data  
+      ```
+      * Set uo database by running and generate db.sqlite file:
+      ```
+      cds deploy --to sqlite
+      ```
+      * Run the app:
+      ```
+      mvn clean spring-boot:run 
+      ```
+4. Send some custom request by POSTman:
+```
+http://localhost:8080/api/BooksService/Book(0bc4b452-ca1a-431a-b6c1-80819cf0bfa1)?$expand=author($select=ID,firstname)
+```
+```
+http://localhost:8080/api/BooksService/Author(60edb0b6-7bc3-41e3-8321-a9fdd3f6ba63)?$expand=books($select=ID,name,stock)
+```
+
+</details>
+
