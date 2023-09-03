@@ -1,8 +1,6 @@
 
 DROP VIEW IF EXISTS localized_fr_BooksService_Author;
 DROP VIEW IF EXISTS localized_de_BooksService_Author;
-DROP VIEW IF EXISTS localized_fr_StoresService_Stores;
-DROP VIEW IF EXISTS localized_de_StoresService_Stores;
 DROP VIEW IF EXISTS localized_fr_BooksService_Book;
 DROP VIEW IF EXISTS localized_de_BooksService_Book;
 DROP VIEW IF EXISTS localized_fr_BooksService_Currencies;
@@ -18,7 +16,6 @@ DROP VIEW IF EXISTS localized_de_bookstore_Books;
 DROP VIEW IF EXISTS localized_fr_sap_common_Currencies;
 DROP VIEW IF EXISTS localized_de_sap_common_Currencies;
 DROP VIEW IF EXISTS localized_BooksService_Author;
-DROP VIEW IF EXISTS localized_StoresService_Stores;
 DROP VIEW IF EXISTS localized_BooksService_Book;
 DROP VIEW IF EXISTS localized_BooksService_Currencies;
 DROP VIEW IF EXISTS localized_bookstore_Stores;
@@ -28,9 +25,8 @@ DROP VIEW IF EXISTS localized_bookstore_Books;
 DROP VIEW IF EXISTS localized_sap_common_Currencies;
 DROP VIEW IF EXISTS BooksService_Currencies_texts;
 DROP VIEW IF EXISTS BooksService_Currencies;
-DROP VIEW IF EXISTS StoresService_Stores;
-DROP VIEW IF EXISTS BooksService_Author;
 DROP VIEW IF EXISTS BooksService_Book;
+DROP VIEW IF EXISTS BooksService_Author;
 DROP TABLE IF EXISTS sap_common_Currencies_texts;
 DROP TABLE IF EXISTS sap_common_Currencies;
 DROP TABLE IF EXISTS bookstore_BooksStores;
@@ -92,6 +88,12 @@ CREATE TABLE sap_common_Currencies_texts (
   PRIMARY KEY(locale, code)
 ); 
 
+CREATE VIEW BooksService_Author AS SELECT
+  Authors_0.ID,
+  Authors_0.firstname,
+  Authors_0.lastname
+FROM bookstore_Authors AS Authors_0; 
+
 CREATE VIEW BooksService_Book AS SELECT
   Books_0.ID,
   Books_0.name,
@@ -100,21 +102,6 @@ CREATE VIEW BooksService_Book AS SELECT
   Books_0.currency_code,
   Books_0.author_ID
 FROM bookstore_Books AS Books_0; 
-
-CREATE VIEW BooksService_Author AS SELECT
-  Authors_0.ID,
-  Authors_0.firstname,
-  Authors_0.lastname
-FROM bookstore_Authors AS Authors_0; 
-
-CREATE VIEW StoresService_Stores AS SELECT
-  Stores_0.ID,
-  Stores_0.createdAt,
-  Stores_0.createdBy,
-  Stores_0.modifiedAt,
-  Stores_0.modifiedBy,
-  Stores_0.name
-FROM bookstore_Stores AS Stores_0; 
 
 CREATE VIEW BooksService_Currencies AS SELECT
   Currencies_0.name,
@@ -188,15 +175,6 @@ CREATE VIEW localized_BooksService_Book AS SELECT
   Books_0.currency_code,
   Books_0.author_ID
 FROM localized_bookstore_Books AS Books_0; 
-
-CREATE VIEW localized_StoresService_Stores AS SELECT
-  Stores_0.ID,
-  Stores_0.createdAt,
-  Stores_0.createdBy,
-  Stores_0.modifiedAt,
-  Stores_0.modifiedBy,
-  Stores_0.name
-FROM localized_bookstore_Stores AS Stores_0; 
 
 CREATE VIEW localized_BooksService_Author AS SELECT
   Authors_0.ID,
@@ -319,24 +297,6 @@ CREATE VIEW localized_fr_BooksService_Book AS SELECT
   Books_0.currency_code,
   Books_0.author_ID
 FROM localized_fr_bookstore_Books AS Books_0; 
-
-CREATE VIEW localized_de_StoresService_Stores AS SELECT
-  Stores_0.ID,
-  Stores_0.createdAt,
-  Stores_0.createdBy,
-  Stores_0.modifiedAt,
-  Stores_0.modifiedBy,
-  Stores_0.name
-FROM localized_de_bookstore_Stores AS Stores_0; 
-
-CREATE VIEW localized_fr_StoresService_Stores AS SELECT
-  Stores_0.ID,
-  Stores_0.createdAt,
-  Stores_0.createdBy,
-  Stores_0.modifiedAt,
-  Stores_0.modifiedBy,
-  Stores_0.name
-FROM localized_fr_bookstore_Stores AS Stores_0; 
 
 CREATE VIEW localized_de_BooksService_Author AS SELECT
   Authors_0.ID,

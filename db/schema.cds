@@ -10,7 +10,7 @@ using { Currency, cuid, managed } from '@sap/cds/common';
 
   entity Books : cuid {
     name    : String(111) @mandatory;
-    stock   : Integer;
+    stock   : Integer @assert.range: [ 1, 20 ];
     price   : Decimal(9,2);
     currency : Currency;
     author  : Association to Authors;
