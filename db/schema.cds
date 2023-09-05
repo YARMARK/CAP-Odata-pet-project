@@ -10,9 +10,11 @@ using { Currency, cuid, managed } from '@sap/cds/common';
 
   entity Books : cuid {
     name    : String(111) @mandatory;
-    stock   : Integer @assert.range: [ 1, 20 ];
+    stock   : Integer @assert.range : [ 1, 20 ];
     price   : Decimal(9,2);
+    virtual totalProfit  : Decimal(9,2);
     currency : Currency;
+    top     : Boolean default false;
     author  : Association to Authors;
     stores  : Association to many BooksStores on stores.book = $self;
   }

@@ -6,6 +6,7 @@ spring:
     driver-class-name: org.sqlite.JDBC
     hikari:
       maximum-pool-size: 1
+
   sql:
     init:
       mode: always

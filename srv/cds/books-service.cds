@@ -5,16 +5,18 @@ using { Currency } from '@sap/cds/common';
 service BooksService{
 
    @readonly
-   entity Author as projection on db.Authors;
+   entity Author as projection on db.Authors
+     actions{
+       action totalProfitForEachBook (extra: Integer) returns array of Book;
+   };
 
-   @readonly
    entity Book as projection on db.Books;
 
-   function getAllBooks (id: String) returns many BookDto;
+   function getAllBooksByAuthor (id: String) returns many BookDto;
 
    type BookDto {
         name: String;
-        price : Decimal;
+        price : Decimal(9,2);
         currency : Currency;
    }
 

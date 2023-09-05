@@ -47,6 +47,7 @@ CREATE TABLE bookstore_Books (
   stock INTEGER,
   price DECIMAL(9, 2),
   currency_code NVARCHAR(3),
+  "TOP" BOOLEAN DEFAULT FALSE,
   author_ID NVARCHAR(36),
   PRIMARY KEY(ID)
 ); 
@@ -100,6 +101,7 @@ CREATE VIEW BooksService_Book AS SELECT
   Books_0.stock,
   Books_0.price,
   Books_0.currency_code,
+  Books_0."TOP",
   Books_0.author_ID
 FROM bookstore_Books AS Books_0; 
 
@@ -132,6 +134,7 @@ CREATE VIEW localized_bookstore_Books AS SELECT
   L.stock,
   L.price,
   L.currency_code,
+  L."TOP",
   L.author_ID
 FROM bookstore_Books AS L; 
 
@@ -173,6 +176,7 @@ CREATE VIEW localized_BooksService_Book AS SELECT
   Books_0.stock,
   Books_0.price,
   Books_0.currency_code,
+  Books_0."TOP",
   Books_0.author_ID
 FROM localized_bookstore_Books AS Books_0; 
 
@@ -204,6 +208,7 @@ CREATE VIEW localized_de_bookstore_Books AS SELECT
   L.stock,
   L.price,
   L.currency_code,
+  L."TOP",
   L.author_ID
 FROM bookstore_Books AS L; 
 
@@ -213,6 +218,7 @@ CREATE VIEW localized_fr_bookstore_Books AS SELECT
   L.stock,
   L.price,
   L.currency_code,
+  L."TOP",
   L.author_ID
 FROM bookstore_Books AS L; 
 
@@ -286,6 +292,7 @@ CREATE VIEW localized_de_BooksService_Book AS SELECT
   Books_0.stock,
   Books_0.price,
   Books_0.currency_code,
+  Books_0."TOP",
   Books_0.author_ID
 FROM localized_de_bookstore_Books AS Books_0; 
 
@@ -295,6 +302,7 @@ CREATE VIEW localized_fr_BooksService_Book AS SELECT
   Books_0.stock,
   Books_0.price,
   Books_0.currency_code,
+  Books_0."TOP",
   Books_0.author_ID
 FROM localized_fr_bookstore_Books AS Books_0; 
 
