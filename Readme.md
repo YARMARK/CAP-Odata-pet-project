@@ -60,6 +60,11 @@ mvn spring-boot:run
 
 </details>
 
+## Before beginning
+
+You can use Visual Studio Code to test you cds
+file. [Installing VSCode](https://cap.cloud.sap/docs/get-started/jumpstart#_6-install-visual-studio-code)
+
 ## Adding entities and relations
 
 According [Reuse a CAP Java Service](https://developers.sap.com/tutorials/cp-cap-java-service-reuse.html)
@@ -251,7 +256,6 @@ read [Adding custom events (Unbound function)](#adding-custom-events-unbound-fun
 3. Add custom events to "bookstore-service.cds". There
    is [action](https://cap.cloud.sap/docs/guides/providing-services#calling-actions-or-functions)
    which bound to entity Author. Add new methods at service layer (service package), also add update entity method.
-
 
 ```
  @readonly
