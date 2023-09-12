@@ -1,0 +1,44 @@
+{
+  "xsappname": "bookstore-app",
+  "tenant-mode": "shared",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
+    },
+    {
+      "name": "$XSAPPNAME.Display",
+      "description": "Display"
+    },
+    {
+      "name": "$XSAPPNAME.mtcallback",
+      "description": "Subscription via SaaS Registry",
+      "grant-as-authority-to-apps": [
+        "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+      ]
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "Admin",
+      "description": "Administrate content",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ]
+    },
+    {
+      "name": "Viewer",
+      "description": "View content",
+      "scope-references": [
+        "$XSAPPNAME.Display"
+      ]
+    }
+  ],
+  "oauth2-configuration": {
+    "token-validity": 86400,
+    "refresh-token-validity": 2592000,
+    "redirect-uris": [
+      "https://*.cfapps.us10-001.hana.ondemand.com/**"
+    ]
+  }
+}

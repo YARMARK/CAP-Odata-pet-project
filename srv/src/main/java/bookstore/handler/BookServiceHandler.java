@@ -1,19 +1,16 @@
 package bookstore.handler;
 
-import static java.math.BigDecimal.*;
-
 import bookstore.service.AuthorService;
 import bookstore.service.BookService;
-import cds.gen.booksservice.BookDto;
 import cds.gen.booksservice.Book_;
 import cds.gen.booksservice.BooksService_;
-import cds.gen.booksservice.GetAllBooksByAuthorContext;
-import cds.gen.booksservice.TotalProfitForEachBookContext;
-import cds.gen.booksservice.Author;
+import cds.gen.booksservice.BookDto;
+import cds.gen.booksservice.Book;
 import cds.gen.bookstore.Authors;
 import cds.gen.bookstore.Books;
-import cds.gen.booksservice.Book;
-import com.sap.cds.ql.cqn.CqnSelect;
+import cds.gen.booksservice.Author;
+import cds.gen.booksservice.TotalProfitForEachBookContext;
+import cds.gen.booksservice.GetAllBooksByAuthorContext;
 import com.sap.cds.services.ErrorStatuses;
 import com.sap.cds.services.ServiceException;
 import com.sap.cds.services.cds.CdsReadEventContext;
@@ -22,13 +19,15 @@ import com.sap.cds.services.handler.EventHandler;
 import com.sap.cds.services.handler.annotations.Before;
 import com.sap.cds.services.handler.annotations.On;
 import com.sap.cds.services.handler.annotations.ServiceName;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.math.BigDecimal.valueOf;
 
 @Slf4j
 @Component
@@ -41,7 +40,7 @@ public class BookServiceHandler implements EventHandler {
   private final AuthorService authorService;
 
   // TEST handler
-  @Before(event = CqnService.EVENT_CREATE, entity = Book_.CDS_NAME)
+  @Before(event = CqnService.EVENT_CREATE, entity = cds.gen.booksservice.Book_.CDS_NAME)
   public void validateBookAuthor(List<Books> books) {
     for (Books book : books) {
       String authorId = book.getAuthorId();
@@ -55,7 +54,7 @@ public class BookServiceHandler implements EventHandler {
 
   @On(event = CqnService.EVENT_READ, entity = Book_.CDS_NAME)
   public void read(CdsReadEventContext context) {
-    List<Book> byRequest = bookService.getByRequest(context.getCqn());
+    List<cds.gen.booksservice.Book> byRequest = bookService.getByRequest(context.getCqn());
     byRequest.forEach(book -> book.setTotalProfit(valueOf(0.00)));
     context.setResult(byRequest);
     context.setCompleted();

@@ -27,3 +27,9 @@ hs_err*
 .vscode
 .idea
 .reloadtrigger
+/mta-op-087d42cf-517e-11ee-9e4d-eeee0a989b10/
+/db/src/
+/db/package.json
+/db/undeploy.json
+/mta_archives/
+/app/package-lock.json

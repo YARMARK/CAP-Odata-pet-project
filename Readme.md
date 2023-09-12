@@ -65,6 +65,14 @@ mvn spring-boot:run
 You can use Visual Studio Code to test you cds
 file. [Installing VSCode](https://cap.cloud.sap/docs/get-started/jumpstart#_6-install-visual-studio-code)
 
+## Prerequisites
+
+* JDK - Sapmachine 17.0.8
+* Node v20.6.0
+* Npm v9.8.1
+* [Sap BTP trial account](https://account.hanatrial.ondemand.com/trial/#/home/trial)
+* [SAP HANA instance](https://developers.sap.com/tutorials/cp-cap-java-hana-db.html)
+
 ## Adding entities and relations
 
 According [Reuse a CAP Java Service](https://developers.sap.com/tutorials/cp-cap-java-service-reuse.html)
@@ -296,7 +304,102 @@ read [Adding custom events (Unbound function)](#adding-custom-events-unbound-fun
 
 </details>
 
+## CAP Multitenancy support
+
+To enable multitenancy on the SAP BTP, we need to deploy tenant aware approuter, mtx-sidecar module and configure below
+three services:
+
+* XSUAA
+* (Service Manager)[https://help.sap.com/docs/service-manager/sap-service-manager/sap-service-manager]
+* (SaaS Provisioning service (saas-registry))[https://help.sap.com/docs/btp/sap-business-technology-platform/register-multitenant-application-to-sap-saas-provisioning-service]
+
+[Services description and flow of multitenancy configuration is provided here](https://blogs.sap.com/2021/05/19/multitenant-application-using-cloud-application-programming-model-cap/)
+
+<details><summary> Description </summary>
+
+1. Add xsuaa and approuter by running a command below. Command will creat "app" directory (approuter config) and
+   xs-security.json file for xsuaa. Also xsuaa section will be added to .cdsrc.json file.
+
+```
+cds add approuter
+```
+
+2. Add multitenancy support by running a command below. This command add mtx.sidecar directory (nodejs module) and
+.cdsrc.json file. Also, xs-security.json will be updated by new scope "mtcallback".
+
+```
+cds add multitenancy
+```
+
+3.  Then we need to add mta.yml by running a command below:
+
+```
+cds add mta
+```
+
+4. In the generated mta.yaml we need to modify several modules:
+     * [OPTIONAL] Change service names;
+     * Extract xsuaa module configuration to xs-security.json:
+```
+   # mta.yml
+   # Module description should be like this:
+     - name: bookstore-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+    requires:
+      - name: app-api
+```
+```
+   # xs-security.json:
+   # add this line to the begining:
+   "xsappname": "bookstore-app",
+   "tenant-mode": "shared",
+   #add this section to the end:
+     "oauth2-configuration": {
+    "token-validity": 86400,
+    "refresh-token-validity": 2592000,
+    "redirect-uris": [
+      "https://*.cfapps.us10-001.hana.ondemand.com/**"
+    ]
+   }
+```
+
+5. In MTX module delete dependency for approuter in requires section:
+```
+   #this part should be deleted:
+    - name: approuter-api
+      properties:
+      SUBSCRIPTION_URL: ~{app-protocol}://\${tenant_subdomain}-~{app-uri}
+```
+
+6. In Approuter module add domain in provides section:
+```
+    provides:
+      - name: app-api
+        properties:
+          url: ${default-url}
+    # Add      
+        domain: ${domain}
+```
+
+</details>
+
+## Deploy
+
 ## Helpful links:
 
 * [CAP tutorial in 15 part](https://bnheise.medium.com/custom-actions-in-cap-java-2-fd84b6b3720a)
+* [cloud-cap-sample-java](https://github.com/SAP-samples/cloud-cap-samples-java/tree/mtx-classic-1.x)
+* [Addition info in Readme.md](https://github.com/Ragimzade/cap-odata-training-project)
 
+## Helpful commands
+
+1. Your SAP HANA Cloud service instance will be automatically stopped overnight, according to the server region time
+   zone. That means you need to restart your instance every day before you start working with it.You can either use SAP
+   BTP cockpit or the Cloud Foundry CLI to restart the stopped instance:
+   ```
+   cf update-service cpapp -c '{"data":{"serviceStopped":false}}'
+   ```
