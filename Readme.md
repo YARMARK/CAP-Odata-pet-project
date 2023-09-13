@@ -234,7 +234,7 @@ service.run(Select.from(cds.gen.bookstore.Books_.class)
 4. It's possible to test application by:
 
 ```
-http://localhost:port/api/BookCase/getAllBooks(id='author id value')
+http://localhost:port/api/BookCase/getAllBooksByAuthor(id='author id value')
 ```
 
 </details>

@@ -4,7 +4,6 @@ using { Currency } from '@sap/cds/common';
 @path: 'BookCase'
 service BooksService{
 
-   @(requires: 'Admin')
    @readonly
    entity Author as projection on db.Authors
      actions{
@@ -13,7 +12,6 @@ service BooksService{
 
    entity Book as projection on db.Books;
 
-   @(requires: 'Display')
    function getAllBooksByAuthor (id: String) returns many BookDto;
 
    type BookDto {
