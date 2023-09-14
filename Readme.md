@@ -71,13 +71,13 @@ file. [Installing VSCode](https://cap.cloud.sap/docs/get-started/jumpstart#_6-in
 * Node v20.6.0
 * Npm v9.8.1
 * [Sap BTP trial account](https://account.hanatrial.ondemand.com/trial/#/home/trial)
-* [SAP HANA instance](https://developers.sap.com/tutorials/cp-cap-java-hana-db.html)
+* [SAP HANA instance](https://developers.sap.com/tutorials/hana-cloud-mission-trial-2.html)
 
 ## Adding entities and relations
 
 According [Reuse a CAP Java Service](https://developers.sap.com/tutorials/cp-cap-java-service-reuse.html)
-add entities (to-One and to-Many Associations) and filling they. According
-the [documentation](https://cap.cloud.sap/docs/cds/cdl#managed-associations)
+add entities (to-One and to-Many Associations) and filling they.
+According [documentation](https://cap.cloud.sap/docs/cds/cdl#managed-associations)
 add Many-to-Many Association.
 
 # FLOW
@@ -140,6 +140,7 @@ add Many-to-Many Association.
       ```
       cds add data  
       ```
+    * Fill out the generated document. You can use [website](https://www.mockaroo.com) to generate data;
     * Set uo database by running and generate db.sqlite file:
       ```
       cds deploy --to sqlite
@@ -202,10 +203,7 @@ add custom events.
 1. Add custom events to "bookstore-service.cds". There
    is [function](https://cap.cloud.sap/docs/guides/providing-services#calling-actions-or-functions)
    in this case.
-
-```
-function getAllBooks (id: String) returns many BookDto;
-```
+![function](images/function.png)
 
 2. Add services. PersistenceService from "com.sap.cds.services.persistence" package is using as
    connection between application and database. It's possible to create queries to database by CQL
@@ -217,8 +215,11 @@ service.run(Select.from(cds.gen.bookstore.Books_.class)
 ```
 
 3. Create BookServiceHandler.class. There are methods for handling
-   events. [EventHandler phases](https://cap.cloud.sap/docs/java/provisioning-api)
-   NOTE: for each event, its own context is created through the cds-plugin
+   events. [EventHandler phases](https://cap.cloud.sap/docs/java/provisioning-api).
+
+   **NOTE**: for each event, its own context is created through the cds-plugin;
+
+   **NOTE**: Also for mapping you can use [model mapper](https://modelmapper.org/)
 
 ```
 @On(event = GetAllBooksByAuthorContext.CDS_NAME)
@@ -311,7 +312,8 @@ three services:
 
 * XSUAA
 * (Service Manager)[https://help.sap.com/docs/service-manager/sap-service-manager/sap-service-manager]
-* (SaaS Provisioning service (saas-registry))[https://help.sap.com/docs/btp/sap-business-technology-platform/register-multitenant-application-to-sap-saas-provisioning-service]
+* (SaaS Provisioning service (
+  saas-registry))[https://help.sap.com/docs/btp/sap-business-technology-platform/register-multitenant-application-to-sap-saas-provisioning-service]
 
 [Services description and flow of multitenancy configuration is provided here](https://blogs.sap.com/2021/05/19/multitenant-application-using-cloud-application-programming-model-cap/)
 
@@ -325,21 +327,22 @@ cds add approuter
 ```
 
 2. Add multitenancy support by running a command below. This command add mtx.sidecar directory (nodejs module) and
-.cdsrc.json file. Also, xs-security.json will be updated by new scope "mtcallback".
+   .cdsrc.json file. Also, xs-security.json will be updated by new scope "mtcallback".
 
 ```
 cds add multitenancy
 ```
 
-3.  Then we need to add mta.yml by running a command below:
+3. Then we need to add mta.yml by running a command below:
 
 ```
 cds add mta
 ```
 
 4. In the generated mta.yaml we need to modify several modules:
-     * [OPTIONAL] Change service names;
-     * Extract xsuaa module configuration to xs-security.json:
+    * [OPTIONAL] Change service names;
+    * Extract xsuaa module configuration to xs-security.json:
+
 ```
    # mta.yml
    # Module description should be like this:
@@ -352,6 +355,7 @@ cds add mta
     requires:
       - name: app-api
 ```
+
 ```
    # xs-security.json:
    # add this line to the begining:
@@ -368,6 +372,7 @@ cds add mta
 ```
 
 5. In MTX module delete dependency for approuter in requires section:
+
 ```
    #this part should be deleted:
     - name: approuter-api
@@ -376,6 +381,7 @@ cds add mta
 ```
 
 6. In Approuter module add domain in provides section:
+
 ```
     provides:
       - name: app-api
@@ -389,17 +395,80 @@ cds add mta
 
 ## Deploy
 
+There are two approaches to create SAP HANA DB instance:
+
+* The first approach is creating db instance in subaccount space. **NOTE**: this instance can be used only by
+  application which
+  located in current space.
+* The second approach is creating db instance in subaccount.  ** NOTE**: this instance can be used by all application
+  form different subaccounts of global account.
+
+<details><summary> Description </summary>
+
+### [Creating SAP HANA instance in subaccount space](https://developers.sap.com/tutorials/btp-app-hana-cloud-setup.html)
+
+<details><summary> Description </summary>
+
+1. Go to subaccount, click on 'SAPCES' on the left sidebar:
+   ![2](images/hana_cloud_empty.png)
+2. Choose SAP HANA Cloud, SAP HANA Database:
+   ![3](images/hana_cloud_create_1.png)
+   ![4](images/hana_cloud_create_2b.png)
+   ![5](images/hana_cloud_create_4.png)
+   ![6](images/hana_cloud_created.png)
+
+</details>
+
+### Creating SAP HANA instance in subaccount area
+
+You can do this steps only if you finished steps form [Prerequisites](#prerequisites) 
+
+<details><summary> Description </summary>
+
+1. Go to subaccount:
+   ![7](images/sub.png)
+2. Choose Instances and Subscriptions:
+   ![8](images/subacc.png)
+3.  Click on SAP HANA CLOUD then chose:
+   ![9](images/hana_cloud_create_1.png)
+   ![5](images/subacc3.png)
+4. Add mapping, click on 'next step' and then click on create .
+   
+   **NOTE**: You can get account guid by running: 
+```
+cf space <space_name> --guid
+```
+![6](images/subacc4.png)
+
+</details>
+
+### Adding roles
+
+ To get access to SaaS-Registry-Dashboard you need to assign following role:
+```
+Subscription Management Dashboard Administrator
+```
+```
+Subscription Management Dashboard Viewer
+```
+<details><summary> Description </summary>
+
+To get access you wil need to set up a role collection:
+
+1. Go to the Security;
+2. Go to Role Collection;
+3. Add a new Role Collection by clicking + button, call it whatever you want and hit create;
+4. Scroll down and click edit that new role collection and hit edit;
+5. Add two roles Subscription Management Dashboard Administrator and Subscription Management Dashboard Viewer;
+6. In Users tab add your email address;
+
+</details>
+
+</details>
+
 ## Helpful links:
 
 * [CAP tutorial in 15 part](https://bnheise.medium.com/custom-actions-in-cap-java-2-fd84b6b3720a)
 * [cloud-cap-sample-java](https://github.com/SAP-samples/cloud-cap-samples-java/tree/mtx-classic-1.x)
 * [Addition info in Readme.md](https://github.com/Ragimzade/cap-odata-training-project)
 
-## Helpful commands
-
-1. Your SAP HANA Cloud service instance will be automatically stopped overnight, according to the server region time
-   zone. That means you need to restart your instance every day before you start working with it.You can either use SAP
-   BTP cockpit or the Cloud Foundry CLI to restart the stopped instance:
-   ```
-   cf update-service cpapp -c '{"data":{"serviceStopped":false}}'
-   ```
